@@ -1,10 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Lab2" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ThemeLight.Lab2" parent="Theme.AppCompat">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryDark">@color/purple_700</item>
-        <item name="colorAccent">@color/teal_200</item>
+        <item name="colorPrimary">#FF018786</item>
+        <item name="colorPrimaryDark">#FF018786</item>
+        <item name="colorAccent">#037C70</item>
+        <item name="android:textColor">#292828</item>
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:editTextStyle">@style/myEditText</item>
+        <item name="android:colorButtonNormal">#FF018786</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="ThemeNight.Lab2" parent="Theme.AppCompat">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#013E3E</item>
+        <item name="colorPrimaryDark">#013E3E</item>
+        <item name="colorAccent">#037C70</item>
+        <item name="android:textColor">#E6ECEA</item>
+        <item name="android:colorBackground">#322D2D</item>
+        <item name="android:colorButtonNormal">#013E3E</item>
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="myEditText" parent="@android:style/Widget.Holo.Light.EditText">
+        <item name="android:textColor">#000000</item>
+        <item name="android:backgroundTint">#737272</item>
+        <item name="android:textColorHint">#737272</item>
     </style>
 </resources>
