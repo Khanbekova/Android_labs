@@ -14,9 +14,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class Activity2 extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
+    DatabaseHandler db = new DatabaseHandler(this);
     public static final String APP_PREFERENCES = "mysettings";
     public static final int APP_PREFERENCES_THEME = 1;
     int positionTheme;
@@ -48,9 +50,11 @@ public class Activity2 extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Bundle bundle = getIntent().getExtras();
+        String user = bundle.get("hello").toString();
         SharedPreferences sharedPrefTheme =  this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor1 = sharedPrefTheme.edit();
-        positionTheme = sharedPrefTheme.getInt("position", 1);
+        positionTheme = sharedPrefTheme.getInt(user, 1);
         Log.d("Act2TagSTYLE" , String.valueOf(positionTheme));
 
 
@@ -62,8 +66,7 @@ public class Activity2 extends AppCompatActivity {
         }
         Log.d("Act2TagSTYLE" , String.valueOf(positionTheme));
 
-        Bundle bundle = getIntent().getExtras();
-        String user = bundle.get("hello").toString();
+
 
         setContentView(R.layout.activity_2);
         ArrayList<String> StringArray = new ArrayList<String>();
@@ -73,12 +76,23 @@ public class Activity2 extends AppCompatActivity {
         Button button3 = findViewById(R.id.button3);
         Button button4 = findViewById(R.id.button4);
         Button button5 = findViewById(R.id.button5);
+        Button button8 = findViewById(R.id.button8);
+        Button button7 = findViewById(R.id.button7);
 
         ListView listView = findViewById(R.id.textList);
 
         TextAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, StringArray);
         listView.setAdapter(TextAdapter);
         StringArray.add(user);
+
+        List<User> users = db.getAllUsers();
+        for (User usr : users) {
+
+            String allUsers = "Login: " + usr.getLogin() + " ,Password: " + usr.getPass();
+            StringArray.add(allUsers);
+        }
+
+
         super.onCreate(savedInstanceState);
         Log.d("Act2TagSTYLE" , "onCreate");
         button2.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +106,7 @@ public class Activity2 extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Activity2.this, Activity1.class);
+                Intent intent = new Intent(MainActivity.this, IdentActivity.class);
                 Log.d("Act2Tag" , "CallAct1");
                 startActivity(intent);
 
@@ -109,13 +123,33 @@ public class Activity2 extends AppCompatActivity {
                     setTheme(R.style.ThemeLight_Lab2);
                     positionTheme = 0;
                 }
-                editor1.putInt("position",positionTheme );
+                editor1.putInt(user,positionTheme );
                 editor1.apply();
                 Log.d("Act2Tag" , String.valueOf(positionTheme));
                 recreate();
 
             }
         });
+
+        button7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DelUserActivity.class);
+                intent.putExtra("hello", user);
+                Log.d("Act2Tag" , "CallAct3");
+                startActivity(intent);
+            }
+        });
+        button8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChangePassActivity.class);
+                intent.putExtra("hello", user);
+                Log.d("Act2Tag" , "CallAct3");
+                startActivity(intent);
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override

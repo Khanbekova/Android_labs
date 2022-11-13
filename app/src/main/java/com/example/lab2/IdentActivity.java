@@ -11,7 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class Activity1 extends Activity {
+
+public class IdentActivity extends Activity {
+    DatabaseHandler db = new DatabaseHandler(this);
+
     public static final String APP_PREFERENCES = "mysettings";
     public static final int APP_PREFERENCES_THEME = 1;
     int positionTheme;
@@ -28,6 +31,7 @@ public class Activity1 extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        /*db.deleteAll();*/
         Log.d("Act1Tag" , "onPause");
     }
     @Override
@@ -38,6 +42,7 @@ public class Activity1 extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        db.close();
         Log.d("Act1Tag" , "onDestroy");
     }
     @Override
@@ -49,17 +54,7 @@ public class Activity1 extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        SharedPreferences sharedPrefTheme = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        positionTheme = sharedPrefTheme.getInt("position", 1);
-        Log.d("Act1TagSTYLE" , String.valueOf(positionTheme));
-        if (positionTheme == 0){
-            setTheme(R.style.ThemeNight_Lab2);
-            Log.d("Act1TagSTYLE" , "NIGHT_MODE");
-        }
-        else{
-            setTheme(R.style.ThemeLight_Lab2);
-        }
 
         setContentView(R.layout.activity_act1);
         EditText personName = findViewById(R.id.editTextTextPersonName);
@@ -73,6 +68,7 @@ public class Activity1 extends Activity {
         password.setText(sharedPref2.getString("text2",""));
 
         Button btnActTwo = findViewById(R.id.button);
+        Button regUser = findViewById(R.id.button6);
 
 
         super.onCreate(savedInstanceState);
@@ -85,18 +81,30 @@ public class Activity1 extends Activity {
                     return;
                 }
                 else {
-                    if ((personName.getText().toString().equals("Elena"))&&(password.getText().toString().equals("1234"))) {
+
+                    if ((db.identUser( password.getText().toString(),  personName.getText().toString())) != 0) {
 
                         editor1.putString("text1", personName.getText().toString());
                         editor1.apply();
                         editor2.putString("text2", password.getText().toString());
                         editor2.apply();
-                        Intent intent = new Intent(Activity1.this, Activity2.class);
+                        Intent intent = new Intent(IdentActivity.this, MainActivity.class);
                         intent.putExtra("hello", (personName.getText().toString()));
                         Log.d("Act1Tag" , "CallAct2");
                         startActivity(intent);
                     }
                 }
+            }
+        });
+        regUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User usr = new User();
+                usr.setLogin(personName.getText().toString());
+                usr.setPass(password.getText().toString());
+
+
+                db.addUser(usr);
             }
         });
 
